@@ -1,9 +1,41 @@
-#include "grailV3_solver_client.hpp"
-#include "aggregator_solver_protocol.hpp"
-#include "sample_data.hpp"
-#include "netbuffer.hpp"
+/*
+ * Copyright (c) 2012 Bernhard Firner and Rutgers University
+ * All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ * or visit http://www.gnu.org/licenses/gpl-2.0.html
+ */
+
+/*******************************************************************************
+ * @file streamcollect_solver.cpp
+ * Prints out packet information in a format that people have been using for
+ * other projects.
+ *
+ * @author Bernhard Firner
+ ******************************************************************************/
+
+
+#include <owl/netbuffer.hpp>
+#include <owl/solver_aggregator_connection.hpp>
+#include <owl/sample_data.hpp>
+#include <owl/grail_types.hpp>
+#include <owl/world_model_protocol.hpp>
 
 #include <algorithm>
+#include <fstream>
+#include <set>
 #include <sstream>
 #include <vector>
 
@@ -92,12 +124,12 @@ int main(int argc, char** cargv) {
   }
 
 	//Grab the ip and ports for the aggregators and distributor.
-	vector<NetTarget> aggregators;
+	vector<SolverAggregator::NetTarget> aggregators;
 
 	for (int s_num = 2; s_num < argv.size(); s_num += 2) {
 		string aggr_ip(argv[s_num]);
 		uint16_t aggr_port = atoi(argv[s_num + 1]);
-		aggregators.push_back(NetTarget{aggr_ip, aggr_port});
+		aggregators.push_back(SolverAggregator::NetTarget{aggr_ip, aggr_port});
 	}
 
 	Rule winlab_rule;
@@ -143,9 +175,9 @@ int main(int argc, char** cargv) {
   }
 
 	Subscription winlab_sub{winlab_rule};
-	vector<Subscription> subs{winlab_sub};
 
   //Connect to the grail aggregators with our subscription lists.
-  grailAggregatorConnect(aggregators, subs, packetCallback);
+  SolverAggregator aggregator(aggregators, packetCallback);
+  aggregator.addRules(winlab_sub);
   while (1);
 }
