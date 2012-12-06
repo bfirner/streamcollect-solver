@@ -2,7 +2,7 @@ streamcollect-solver
 ====================
                           Streamcollect Solver
 
-Project Website: <https://github.com/OwlPlatform/libcplusplus>
+Project Website: <https://github.com/bfirner/streamcollect-solver>
 
 Copyright (C) 2012 Bernhard Firner and the Owl Platform
 
@@ -15,5 +15,6 @@ You should have received a copy of the GNU Lesser General Public License along
 with this library; if not, write to the Free Software Foundation, Inc., 51
 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 
-== About ==
+About
+-----
   Print packets from an Owl Platform aggregator in a format that old people enjoy.
